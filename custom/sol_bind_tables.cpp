@@ -49,7 +49,7 @@ sol_4ed_key_mapping sol_4ed_key_maps[] = {
     {.key_4ed=KeyCode_ForwardSlash,},
     {.key_4ed=KeyCode_BackwardSlash,},
     {.key_4ed=KeyCode_Tab,},
-    {.key_4ed=KeyCode_Escape,},
+    {.key_4ed=KeyCode_Escape,.cmd=sol_handle_key_esc},
     {.key_4ed=KeyCode_Pause,},
     {.key_4ed=KeyCode_Up,},
     {.key_4ed=KeyCode_Down,},

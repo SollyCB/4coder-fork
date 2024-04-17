@@ -13,9 +13,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stddef.h>
-#include <string.h>
-#include <assert.h>
 
 #include "4coder_base_types.h"
 #include "4coder_version.h"
