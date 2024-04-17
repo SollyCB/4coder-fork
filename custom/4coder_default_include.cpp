@@ -111,7 +111,9 @@ struct sol_cmd_table {
     sol_custom_cmd ctrl_alt_shift;
 };
 
-// @CmdTodo Change mode?
+// @CmdTodo
+// change mode
+// replace mode
 enum sol_mode { // these are used to index into below struct
     SOL_MODE_NORMAL,
     SOL_MODE_INSERT,

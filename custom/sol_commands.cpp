@@ -1,3 +1,6 @@
+// @CommandsTodo
+// move_to_<top|bottom>_of_view
+
 CUSTOM_COMMAND_SIG(sol_do_command)
 {
     View_ID view = get_active_view(app, Access_ReadWriteVisible);
@@ -22,9 +25,22 @@ CUSTOM_COMMAND_SIG(sol_do_command)
     history_group_end(group);
 }
 
+CUSTOM_COMMAND_SIG(enter_normal_mode)
+{
+    sol_current_mode = SOL_MODE_NORMAL;
+    active_color_table.arrays[defcolor_cursor].vals[0] = 0xff00ff00;
+}
+
 CUSTOM_COMMAND_SIG(enter_insert_mode)
 {
     sol_current_mode = SOL_MODE_INSERT;
+    active_color_table.arrays[defcolor_cursor].vals[0] = 0xff0000ff;
+}
+
+CUSTOM_COMMAND_SIG(enter_delete_mode)
+{
+    sol_current_mode = SOL_MODE_DELETE;
+    active_color_table.arrays[defcolor_cursor].vals[0] = 0xffff0000;
 }
 
 CUSTOM_COMMAND_SIG(insert_char_right)
@@ -39,3 +55,27 @@ CUSTOM_COMMAND_SIG(insert_at_eol)
     enter_insert_mode(app);
 }
 
+CUSTOM_COMMAND_SIG(insert_at_bol)
+{
+    seek_beginning_of_line(app);
+    enter_insert_mode(app);
+}
+
+CUSTOM_COMMAND_SIG(backspace_to_bol)
+{
+    set_mark(app);
+    seek_beginning_of_line(app);
+    delete_range(app);
+}
+
+CUSTOM_COMMAND_SIG(move_down_20)
+{
+    move_down_10(app);
+    move_down_10(app);
+}
+
+CUSTOM_COMMAND_SIG(move_up_20)
+{
+    move_up_10(app);
+    move_up_10(app);
+}
