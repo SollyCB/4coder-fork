@@ -13,6 +13,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
+#include <string.h>
+#include <assert.h>
 
 #include "4coder_base_types.h"
 #include "4coder_version.h"
@@ -66,6 +69,131 @@
 #include "4coder_search_list.h"
 
 ////////////////////////////////
+
+typedef unsigned int uint;
+
+#define SOL_MAX 0xffffffffffffffff
+#define maxif(x) (SOL_MAX + !(x))
+#define isnumkey(x) ((x) > 26 && (x) < 37)
+#define iskeystroke(x) ((x) == InputEventKind_KeyStroke)
+
+struct sol_custom_cmd {
+    void (*cmd)(struct Application_Links *);
+};
+int sol_do_count; // store the number of times to do key repetition
+sol_custom_cmd sol_command;
+
+struct sol_key_info {
+    Input_Event_Kind kind;
+    Key_Code code;
+    Input_Modifier_Set mods;
+};
+sol_key_info sol_last_key;
+
+enum {
+    SOL_MOD_NONE,
+    SOL_MOD_SHIFT,
+    SOL_MOD_CTRL,
+    SOL_MOD_ALT,
+    SOL_MOD_CTRL_SHIFT,
+    SOL_MOD_ALT_SHIFT,
+    SOL_MOD_CTRL_ALT,
+    SOL_MOD_CTRL_ALT_SHIFT,
+};
+
+// @CmdTodo Change mode?
+enum sol_mode {
+    SOL_MODE_NORMAL,
+    SOL_MODE_INSERT,
+    SOL_MODE_DELETE,
+    SOL_MODE_COUNT,
+};
+
+struct sol_cmd_table {
+    sol_custom_cmd none;
+    sol_custom_cmd shift;
+    sol_custom_cmd ctrl;
+    sol_custom_cmd alt;
+    sol_custom_cmd ctrl_shift;
+    sol_custom_cmd alt_shift;
+    sol_custom_cmd ctrl_alt;
+    sol_custom_cmd ctrl_alt_shift;
+};
+
+struct sol_mode_cmd_table {
+    sol_cmd_table normal;
+    sol_cmd_table insert;
+    sol_cmd_table del;
+};
+
+uint sol_cmd_table_byte_offsets[] = {
+    offsetof(sol_cmd_table, none),
+    offsetof(sol_cmd_table, shift),
+    offsetof(sol_cmd_table, ctrl),
+    offsetof(sol_cmd_table, alt),
+    offsetof(sol_cmd_table, ctrl_shift),
+    offsetof(sol_cmd_table, alt_shift),
+    offsetof(sol_cmd_table, ctrl_alt),
+    offsetof(sol_cmd_table, ctrl_alt_shift),
+};
+
+uint sol_mode_cmd_table_byte_offsets[] = {
+    offsetof(sol_mode_cmd_table, normal),
+    offsetof(sol_mode_cmd_table, insert),
+    offsetof(sol_mode_cmd_table, del),
+};
+sol_mode sol_current_mode = SOL_MODE_NORMAL;
+
+inline uint sol_collapse_mods()
+{
+    bool shift = 0;
+    bool ctrl = 0;
+    bool alt = 0;
+    for(uint i = 0; i < sol_last_key.mods.count; ++i) {
+        shift = sol_last_key.mods.mods[i] == KeyCode_Shift || shift;
+        ctrl = sol_last_key.mods.mods[i] == KeyCode_Control || ctrl;
+        alt = sol_last_key.mods.mods[i] == KeyCode_Alt || alt;
+    }
+    // @Ugly There is likely a nicer way to do this.
+    uint ret = 0;
+    ret += (uint)SOL_MOD_SHIFT & maxif(shift && !alt && !ctrl);
+    ret += (uint)SOL_MOD_CTRL & maxif(ctrl && !alt && !shift);
+    ret += (uint)SOL_MOD_ALT & maxif(alt && !ctrl && !shift);
+    ret += (uint)SOL_MOD_CTRL_SHIFT & maxif(ctrl && shift && !alt);
+    ret += (uint)SOL_MOD_ALT_SHIFT & maxif(alt && shift && !ctrl);
+    ret += (uint)SOL_MOD_CTRL_ALT & maxif(ctrl && alt && !shift);
+    ret += (uint)SOL_MOD_CTRL_ALT_SHIFT & maxif(ctrl && alt && shift);
+    return ret;
+}
+
+inline uint sol_cmd_table_offset()
+{
+    return sol_cmd_table_byte_offsets[sol_collapse_mods()];
+}
+inline uint sol_mode_cmd_table_offset()
+{
+    return sol_mode_cmd_table_byte_offsets[sol_current_mode];
+}
+
+inline sol_custom_cmd sol_get_cmd_from_mode_cmd_table(sol_mode_cmd_table *table)
+{
+    uint offset = sol_mode_cmd_table_offset() + sol_cmd_table_offset();
+    return *(sol_custom_cmd*)((char*)table + offset);
+}
+
+typedef sol_custom_cmd (*sol_handle_key_cmd)();
+
+struct sol_4ed_key_mapping {
+    uint key_4ed;
+    sol_handle_key_cmd cmd;
+};
+extern sol_4ed_key_mapping sol_4ed_key_maps[KeyCode_COUNT];
+
+// @TODO CurrentTask Hook do_command up with the handle commands.
+static inline sol_custom_cmd sol_get_cmd()
+{
+    return (*sol_4ed_key_maps[sol_last_key.code].cmd)();
+}
 
 #include "4coder_base_types.cpp"
 #include "4coder_stringf.cpp"
@@ -145,6 +273,9 @@
 #include "4coder_examples.cpp"
 
 #include "4coder_default_hooks.cpp"
+
+#include "sol_commands.cpp"
+#include "sol_bindings.cpp"
 
 #endif
 

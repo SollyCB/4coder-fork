@@ -263,7 +263,7 @@ App_Init_Sig(app_init){
         Scratch_Block scratch(tctx, arena);
         
         String8 binary_path = system_get_path(scratch, SystemPath_Binary);
-        String8 full_path = push_u8_stringf(arena, "%.*sfonts/liberation-mono.ttf", string_expand(binary_path));
+        String8 full_path = push_u8_stringf(arena, "%.*sfonts/IBMPlexMono-Medium.ttf", string_expand(binary_path));
         
         Face_Description description = {};
         description.font.file_name = full_path;

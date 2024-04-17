@@ -1508,7 +1508,7 @@ load_config_and_apply(Application_Links *app, Arena *out_arena, i32 override_fon
     
     String_Const_u8 default_font_name = def_get_config_string(scratch, vars_save_string_lit("default_font_name"));
     if (default_font_name.size == 0){
-        default_font_name = string_u8_litexpr("liberation-mono.ttf");
+        default_font_name = string_u8_litexpr("IBMPlexMono-Medium.ttf");
     }
     
     // TODO(allen): this part seems especially weird now.

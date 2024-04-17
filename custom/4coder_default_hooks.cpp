@@ -86,10 +86,16 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
     for (;;){
         // NOTE(allen): Get input
         User_Input input = get_next_input(app, EventPropertyGroup_Any, 0);
+
         if (input.abort){
             break;
         }
-        
+
+        sol_last_key.kind = input.event.kind;
+        sol_last_key.code = input.event.key.code;
+        sol_last_key.mods = input.event.key.modifiers;
+        sol_custom_cmd cmd = sol_get_cmd();
+
         ProfileScopeNamed(app, "before view input", view_input_profile);
         
         // NOTE(allen): Mouse Suppression
@@ -97,12 +103,28 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
         if (suppressing_mouse && (event_properties & EventPropertyGroup_AnyMouseEvent) != 0){
             continue;
         }
+
+        if (cmd.cmd == 0){
+            leave_current_input_unhandled(app);
+            continue;
+        }
         
+        // NOTE(allen): Run the command and pre/post command stuff
+        default_pre_command(app, scope);
+        ProfileCloseNow(view_input_profile);
+
+        cmd.cmd(app);
+
+        ProfileScope(app, "after view input");
+        default_post_command(app, scope);
+        
+        #if 0
         // NOTE(allen): Get binding
         if (implicit_map_function == 0){
             implicit_map_function = default_implicit_map;
         }
         Implicit_Map_Result map_result = implicit_map_function(app, 0, 0, &input.event);
+
         if (map_result.command == 0){
             leave_current_input_unhandled(app);
             continue;
@@ -114,6 +136,7 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
         map_result.command(app);
         ProfileScope(app, "after view input");
         default_post_command(app, scope);
+        #endif
     }
 }
 
