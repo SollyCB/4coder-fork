@@ -67,7 +67,7 @@ default_implicit_map(Application_Links *app, String_ID lang, String_ID mode, Inp
     Command_Map_ID map_id = default_get_map_id(app, view);
     Command_Binding binding = map_get_binding_recursive(&framework_mapping, map_id, event);
     
-    // TODO(allen): map_id <-> map name?
+    // Todo(allen): map_id <-> map name?
     result.map = 0;
     result.command = binding.custom;
     
@@ -94,7 +94,7 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
         sol_last_key.kind = input.event.kind;
         sol_last_key.code = input.event.key.code;
         sol_last_key.mods = input.event.key.modifiers;
-        sol_update_do_command();
+        sol_custom_cmd sol_command = sol_update_do_command();
 
         ProfileScopeNamed(app, "before view input", view_input_profile);
         
@@ -104,16 +104,28 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
             continue;
         }
 
-        if (sol_command.cmd == 0){
-            leave_current_input_unhandled(app);
-            continue;
+        if (sol_command.cmd == 0) {
+            Implicit_Map_Result map_result = default_implicit_map(app, 0, 0, &input.event);
+            if (map_result.command == 0) {
+                leave_current_input_unhandled(app);
+                continue;
+            } else {
+                default_pre_command(app, scope);
+                ProfileCloseNow(view_input_profile);
+
+                map_result.command(app);
+
+                ProfileScope(app, "after view input");
+                default_post_command(app, scope);
+                continue;
+            }
         }
         
         // NOTE(allen): Run the command and pre/post command stuff
         default_pre_command(app, scope);
         ProfileCloseNow(view_input_profile);
 
-        sol_do_command(app);
+        sol_do_command(app, sol_command);
 
         ProfileScope(app, "after view input");
         default_post_command(app, scope);

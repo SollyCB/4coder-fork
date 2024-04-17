@@ -77,8 +77,8 @@ typedef unsigned int uint;
 struct sol_custom_cmd {
     void (*cmd)(struct Application_Links *);
 };
-int sol_do_count; // store the number of times to do key repetition
-sol_custom_cmd sol_command;
+int sol_do_count = 0; // store the number of times to do key repetition
+sol_custom_cmd sol_command = {};
 
 struct sol_key_info {
     Input_Event_Kind kind;
@@ -156,10 +156,12 @@ extern sol_4ed_key_mapping sol_4ed_key_maps[KeyCode_COUNT];
 
 static inline sol_custom_cmd sol_update_do_command()
 {
-    if (sol_last_key.kind == InputEventKind_KeyStroke)
+    if (sol_last_key.kind == InputEventKind_KeyStroke &&
+        sol_4ed_key_maps[sol_last_key.code].cmd)
+    {
         return (*sol_4ed_key_maps[sol_last_key.code].cmd)();
-    else
-        return {};
+    }
+    return {};
 }
 
 #include "4coder_base_types.cpp"
@@ -240,9 +242,10 @@ static inline sol_custom_cmd sol_update_do_command()
 #include "4coder_examples.cpp"
 
 #include "sol_commands.cpp"
-#include "4coder_default_hooks.cpp"
-
 #include "sol_bindings.cpp"
+#include "sol_bind_tables.cpp"
+
+#include "4coder_default_hooks.cpp"
 
 #endif
 

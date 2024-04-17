@@ -1898,6 +1898,7 @@ main(int argc, char **argv){
         }
         
         if (!has_library){
+            printf("dlerror: %s\n", dlerror());
             system_error_box(custom_not_found_msg);
         }
         custom.get_version = (_Get_Version_Type*)system_get_proc(custom_library, "get_version");

@@ -3,7 +3,7 @@ sol_4ed_key_mapping sol_4ed_key_maps[] = {
     {.key_4ed=KeyCode_A,.cmd=sol_handle_key_a},
     {.key_4ed=KeyCode_B,},
     {.key_4ed=KeyCode_C,},
-    {.key_4ed=KeyCode_D,},
+    {.key_4ed=KeyCode_D,.cmd=sol_handle_key_d},
     {.key_4ed=KeyCode_E,},
     {.key_4ed=KeyCode_F,},
     {.key_4ed=KeyCode_G,},

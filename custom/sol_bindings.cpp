@@ -10,10 +10,6 @@ sol_custom_cmd sol_handle_key_a()
             .none  = insert_char_right,
             .shift = insert_at_eol,
         },
-        .insert = {
-            .none  = write_text_and_auto_indent,
-            .shift = write_text_and_auto_indent,
-        },
     };
     HANDLE_KEY_RETURN();
 }
@@ -24,10 +20,6 @@ sol_custom_cmd sol_handle_key_i()
         .normal = {
             .none  = enter_insert_mode,
             .shift = insert_at_bol,
-        },
-        .insert = {
-            .none  = write_text_and_auto_indent,
-            .shift = write_text_and_auto_indent,
         },
     };
     HANDLE_KEY_RETURN();
@@ -40,9 +32,8 @@ sol_custom_cmd sol_handle_key_d()
             .none  = enter_delete_mode,
             .shift = delete_line,
         },
-        .insert = {
-            .none  = write_text_and_auto_indent,
-            .shift = write_text_and_auto_indent,
+        .del = {
+            .none = nil,
         },
     };
     HANDLE_KEY_RETURN();
@@ -54,10 +45,6 @@ sol_custom_cmd sol_handle_key_h()
         .normal = {
             .none  = move_left,
             .shift = seek_beginning_of_line,
-        },
-        .insert = {
-            .none  = write_text_and_auto_indent,
-            .shift = write_text_and_auto_indent,
         },
         .del = {
             .none = backspace_char,
@@ -74,10 +61,6 @@ sol_custom_cmd sol_handle_key_j()
             .none  = move_down,
             .shift = move_down_20,
         },
-        .insert = {
-            .none  = write_text_and_auto_indent,
-            .shift = write_text_and_auto_indent,
-        },
     };
     HANDLE_KEY_RETURN();
 }
@@ -89,10 +72,6 @@ sol_custom_cmd sol_handle_key_k()
             .none  = move_up,
             .shift = move_up_20,
         },
-        .insert = {
-            .none  = write_text_and_auto_indent,
-            .shift = write_text_and_auto_indent,
-        },
     };
     HANDLE_KEY_RETURN();
 }
@@ -103,10 +82,6 @@ sol_custom_cmd sol_handle_key_l()
         .normal = {
             .none  = move_right,
             .shift = seek_end_of_line,
-        },
-        .insert = {
-            .none  = write_text_and_auto_indent,
-            .shift = write_text_and_auto_indent,
         },
     };
     HANDLE_KEY_RETURN();

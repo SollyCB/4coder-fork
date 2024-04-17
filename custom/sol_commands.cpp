@@ -1,7 +1,7 @@
 // @CommandsTodo
 // move_to_<top|bottom>_of_view
 
-CUSTOM_COMMAND_SIG(sol_do_command)
+void sol_do_command(Application_Links *app, sol_custom_cmd cmd)
 {
     View_ID view = get_active_view(app, Access_ReadWriteVisible);
     Buffer_ID buffer = view_get_buffer(app, view, Access_ReadWriteVisible);
@@ -10,20 +10,23 @@ CUSTOM_COMMAND_SIG(sol_do_command)
 
     // I think that this is an unnecessary check because of
     // checks in the calling code.
-    if (!sol_command.cmd && sol_do_count) {
+    if (!cmd.cmd && sol_do_count) {
         sol_do_count = 0;
         history_group_end(group);
         return;
     }
 
-    for(int i = 0; i < sol_do_count; ++i)
-        sol_command.cmd(app);
+    // @Todo
+//    for(int i = 0; i < sol_do_count; ++i)
+//        sol_command.cmd(app);
+    cmd.cmd(app);
 
     sol_do_count = 0;
-    sol_command = {};
 
     history_group_end(group);
 }
+
+CUSTOM_COMMAND_SIG(nil) {}
 
 CUSTOM_COMMAND_SIG(enter_normal_mode)
 {

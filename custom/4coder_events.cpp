@@ -164,7 +164,7 @@ event_next_text_event(Input_Event *event){
 function String_Const_u8
 to_writable(Input_Event *event){
     String_Const_u8 result = {};
-    if (event->kind == InputEventKind_TextInsert){
+    if (event->kind == InputEventKind_TextInsert) {
         result = event->text.string;
     }
     return(result);
