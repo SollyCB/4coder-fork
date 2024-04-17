@@ -78,7 +78,6 @@ struct sol_custom_cmd {
     void (*cmd)(struct Application_Links *);
 };
 int sol_do_count = 0; // store the number of times to do key repetition
-sol_custom_cmd sol_command = {};
 
 struct sol_key_info {
     Input_Event_Kind kind;

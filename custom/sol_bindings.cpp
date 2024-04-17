@@ -2,6 +2,16 @@
     sol_cmd_table *mode = (sol_cmd_table*)&cmd_table + sol_current_mode; \
     return *((sol_custom_cmd*)mode + sol_collapse_mods())
 
+sol_custom_cmd sol_handle_key_default()
+{
+    sol_mode_cmd_table cmd_table {
+        .normal = {nil,nil,nil,nil,nil,nil,nil,nil},
+        .insert = {{},{},nil,nil,nil,nil,nil,nil},
+        .del    = {nil,nil,nil,nil,nil,nil,nil,nil},
+    };
+    HANDLE_KEY_RETURN();
+}
+
 // Key Bindings
 sol_custom_cmd sol_handle_key_a()
 {
