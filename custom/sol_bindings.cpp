@@ -1,6 +1,4 @@
 // Key Bindings
-typedef sol_custom_cmd (*sol_handle_key_cmd)();
-
 sol_custom_cmd sol_handle_key_a()
 {
     sol_mode_cmd_table cmd_table {
@@ -13,5 +11,6 @@ sol_custom_cmd sol_handle_key_a()
             .shift = write_text_and_auto_indent,
         },
     };
-    return sol_get_cmd_from_mode_cmd_table(&cmd_table);
+    sol_cmd_table *mode = (sol_cmd_table*)&cmd_table + sol_current_mode;
+    return *((sol_custom_cmd*)mode + sol_collapse_mods());
 }

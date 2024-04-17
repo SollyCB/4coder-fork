@@ -1,8 +1,3 @@
-struct sol_4ed_key_mapping {
-    uint key_4ed;
-    sol_handle_key_cmd cmd;
-};
-
 sol_4ed_key_mapping sol_4ed_key_maps[] = {
     {}, // 4ed keys start from 1
     {.key_4ed=KeyCode_A,.cmd=sol_handle_key_a},

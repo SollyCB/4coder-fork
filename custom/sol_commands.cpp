@@ -1,9 +1,12 @@
-CUSTOM_COMMAND_SIG(do_command)
+CUSTOM_COMMAND_SIG(sol_do_command)
 {
     View_ID view = get_active_view(app, Access_ReadWriteVisible);
     Buffer_ID buffer = view_get_buffer(app, view, Access_ReadWriteVisible);
 
     History_Group group = history_group_begin(app, buffer);
+
+    // I think that this is an unnecessary check because of
+    // checks in the calling code.
     if (!sol_command.cmd && sol_do_count) {
         sol_do_count = 0;
         history_group_end(group);

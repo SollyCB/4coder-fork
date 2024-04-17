@@ -94,7 +94,7 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
         sol_last_key.kind = input.event.kind;
         sol_last_key.code = input.event.key.code;
         sol_last_key.mods = input.event.key.modifiers;
-        sol_custom_cmd cmd = sol_get_cmd();
+        sol_update_do_command();
 
         ProfileScopeNamed(app, "before view input", view_input_profile);
         
@@ -104,7 +104,7 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
             continue;
         }
 
-        if (cmd.cmd == 0){
+        if (sol_command.cmd == 0){
             leave_current_input_unhandled(app);
             continue;
         }
@@ -113,7 +113,7 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
         default_pre_command(app, scope);
         ProfileCloseNow(view_input_profile);
 
-        cmd.cmd(app);
+        sol_do_command(app);
 
         ProfileScope(app, "after view input");
         default_post_command(app, scope);

@@ -90,7 +90,7 @@ struct sol_key_info {
 };
 sol_key_info sol_last_key;
 
-enum {
+enum { // these are used to index into below struct
     SOL_MOD_NONE,
     SOL_MOD_SHIFT,
     SOL_MOD_CTRL,
@@ -100,15 +100,6 @@ enum {
     SOL_MOD_CTRL_ALT,
     SOL_MOD_CTRL_ALT_SHIFT,
 };
-
-// @CmdTodo Change mode?
-enum sol_mode {
-    SOL_MODE_NORMAL,
-    SOL_MODE_INSERT,
-    SOL_MODE_DELETE,
-    SOL_MODE_COUNT,
-};
-
 struct sol_cmd_table {
     sol_custom_cmd none;
     sol_custom_cmd shift;
@@ -120,27 +111,17 @@ struct sol_cmd_table {
     sol_custom_cmd ctrl_alt_shift;
 };
 
+// @CmdTodo Change mode?
+enum sol_mode { // these are used to index into below struct
+    SOL_MODE_NORMAL,
+    SOL_MODE_INSERT,
+    SOL_MODE_DELETE,
+    SOL_MODE_COUNT,
+};
 struct sol_mode_cmd_table {
     sol_cmd_table normal;
     sol_cmd_table insert;
     sol_cmd_table del;
-};
-
-uint sol_cmd_table_byte_offsets[] = {
-    offsetof(sol_cmd_table, none),
-    offsetof(sol_cmd_table, shift),
-    offsetof(sol_cmd_table, ctrl),
-    offsetof(sol_cmd_table, alt),
-    offsetof(sol_cmd_table, ctrl_shift),
-    offsetof(sol_cmd_table, alt_shift),
-    offsetof(sol_cmd_table, ctrl_alt),
-    offsetof(sol_cmd_table, ctrl_alt_shift),
-};
-
-uint sol_mode_cmd_table_byte_offsets[] = {
-    offsetof(sol_mode_cmd_table, normal),
-    offsetof(sol_mode_cmd_table, insert),
-    offsetof(sol_mode_cmd_table, del),
 };
 sol_mode sol_current_mode = SOL_MODE_NORMAL;
 
@@ -166,21 +147,6 @@ inline uint sol_collapse_mods()
     return ret;
 }
 
-inline uint sol_cmd_table_offset()
-{
-    return sol_cmd_table_byte_offsets[sol_collapse_mods()];
-}
-inline uint sol_mode_cmd_table_offset()
-{
-    return sol_mode_cmd_table_byte_offsets[sol_current_mode];
-}
-
-inline sol_custom_cmd sol_get_cmd_from_mode_cmd_table(sol_mode_cmd_table *table)
-{
-    uint offset = sol_mode_cmd_table_offset() + sol_cmd_table_offset();
-    return *(sol_custom_cmd*)((char*)table + offset);
-}
-
 typedef sol_custom_cmd (*sol_handle_key_cmd)();
 
 struct sol_4ed_key_mapping {
@@ -189,10 +155,12 @@ struct sol_4ed_key_mapping {
 };
 extern sol_4ed_key_mapping sol_4ed_key_maps[KeyCode_COUNT];
 
-// @TODO CurrentTask Hook do_command up with the handle commands.
-static inline sol_custom_cmd sol_get_cmd()
+static inline sol_custom_cmd sol_update_do_command()
 {
-    return (*sol_4ed_key_maps[sol_last_key.code].cmd)();
+    if (sol_last_key.kind == InputEventKind_KeyStroke)
+        return (*sol_4ed_key_maps[sol_last_key.code].cmd)();
+    else
+        return {};
 }
 
 #include "4coder_base_types.cpp"
@@ -272,9 +240,9 @@ static inline sol_custom_cmd sol_get_cmd()
 
 #include "4coder_examples.cpp"
 
+#include "sol_commands.cpp"
 #include "4coder_default_hooks.cpp"
 
-#include "sol_commands.cpp"
 #include "sol_bindings.cpp"
 
 #endif
