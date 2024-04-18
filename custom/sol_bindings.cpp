@@ -1,111 +1,63 @@
-#define HANDLE_KEY_RETURN() \
-    sol_cmd_table *mode = (sol_cmd_table*)&cmd_table + sol_current_mode; \
-    return *((sol_custom_cmd*)mode + sol_collapse_mods())
-
-sol_custom_cmd sol_handle_key_default()
-{
-    sol_mode_cmd_table cmd_table {
-        .normal = {nil,nil,nil,nil,nil,nil,nil,nil},
-        .insert = {{},{},nil,nil,nil,nil,nil,nil},
-        .del    = {nil,nil,nil,nil,nil,nil,nil,nil},
-    };
-    HANDLE_KEY_RETURN();
-}
-
+////////////////////////////////////////////////////////////////////////////////
 // Key Bindings
-sol_custom_cmd sol_handle_key_a()
-{
-    sol_mode_cmd_table cmd_table {
-        .normal = {
-            .none  = insert_char_right,
-            .shift = insert_at_eol,
-        },
-    };
-    HANDLE_KEY_RETURN();
+
+typedef void (*bindfn)();
+
+#define bind(key, mode, mod, new_cmd) sol_bind_table[KeyCode_##key].table.mode.mod.cmd = new_cmd
+#define declbindfn(key) void sol_bindfn_##key()
+#define refbindfn(key) sol_bindfn_##key
+
+declbindfn(a) {
+    bind(A, normal, none,  insert_char_right);
+    bind(A, normal, shift, insert_at_bol);
 }
 
-sol_custom_cmd sol_handle_key_i()
-{
-    sol_mode_cmd_table cmd_table {
-        .normal = {
-            .none  = enter_insert_mode,
-            .shift = insert_at_bol,
-        },
-    };
-    HANDLE_KEY_RETURN();
+declbindfn(i) {
+    bind(I, normal, none,  enter_insert_mode);
+    bind(I, normal, shift, insert_at_bol);
 }
 
-sol_custom_cmd sol_handle_key_d()
-{
-    sol_mode_cmd_table cmd_table {
-        .normal = {
-            .none  = enter_delete_mode,
-            .shift = delete_line,
-        },
-        .del = {
-            .none = nil,
-        },
-    };
-    HANDLE_KEY_RETURN();
+declbindfn(d) {
+    bind(D, normal, none,  enter_delete_mode);
+    bind(D, normal, shift, delete_line);
 }
 
-sol_custom_cmd sol_handle_key_h()
-{
-    sol_mode_cmd_table cmd_table {
-        .normal = {
-            .none  = move_left,
-            .shift = seek_beginning_of_line,
-        },
-        .del = {
-            .none = backspace_char,
-            .shift = backspace_to_bol,
-        },
-    };
-    HANDLE_KEY_RETURN();
+declbindfn(h) {
+    bind(H, normal, none,  move_left);
+    bind(H, normal, shift, seek_beginning_of_line);
+    bind(H, del,    none,  backspace_char);
+    bind(H, del,    shift, backspace_to_bol);
 }
 
-sol_custom_cmd sol_handle_key_j()
-{
-    sol_mode_cmd_table cmd_table {
-        .normal = {
-            .none  = move_down,
-            .shift = move_down_20,
-        },
-    };
-    HANDLE_KEY_RETURN();
+declbindfn(j) {
+    bind(J, normal, none,  move_down);
+    bind(J, normal, shift, move_down_20);
 }
 
-sol_custom_cmd sol_handle_key_k()
-{
-    sol_mode_cmd_table cmd_table {
-        .normal = {
-            .none  = move_up,
-            .shift = move_up_20,
-        },
-    };
-    HANDLE_KEY_RETURN();
+declbindfn(k) {
+    bind(K, normal, none,  move_up);
+    bind(K, normal, shift, move_up_20);
 }
 
-sol_custom_cmd sol_handle_key_l()
-{
-    sol_mode_cmd_table cmd_table {
-        .normal = {
-            .none  = move_right,
-            .shift = seek_end_of_line,
-        },
-    };
-    HANDLE_KEY_RETURN();
+declbindfn(l) {
+    bind(L, normal, none,  move_right);
+    bind(L, normal, shift, seek_end_of_line);
+    bind(L, del,    none,  delete_char);
+    bind(L, del,    shift, delete_to_eol);
 }
 
-sol_custom_cmd sol_handle_key_esc()
-{
-    sol_mode_cmd_table cmd_table {
-        .insert = {
-            .none  = enter_normal_mode,
-        },
-        .del = {
-            .none  = enter_normal_mode,
-        },
-    };
-    HANDLE_KEY_RETURN();
+declbindfn(escape) {
+    bind(Escape, normal, none, enter_normal_mode);
+    bind(Escape, del,    none, enter_normal_mode);
 }
+
+bindfn sol_bind_fns[] = {
+    refbindfn(a),
+    refbindfn(i),
+    refbindfn(d),
+    refbindfn(h),
+    refbindfn(j),
+    refbindfn(k),
+    refbindfn(l),
+    refbindfn(escape),
+};

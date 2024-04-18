@@ -73,6 +73,7 @@ typedef unsigned int uint;
 #define maxif(x) (SOL_MAX + !(x))
 #define isnumkey(x) ((x) > 26 && (x) < 37)
 #define iskeystroke(x) ((x) == InputEventKind_KeyStroke)
+#define arrlen(x) (sizeof(x)/sizeof((x)[0]))
 
 struct sol_custom_cmd {
     void (*cmd)(struct Application_Links *);
@@ -82,7 +83,7 @@ int sol_do_count = 0; // store the number of times to do key repetition
 struct sol_key_info {
     Input_Event_Kind kind;
     Key_Code code;
-    Input_Modifier_Set mods;
+    uint mods;
 };
 sol_key_info sol_last_key;
 
@@ -123,15 +124,15 @@ struct sol_mode_cmd_table {
 };
 sol_mode sol_current_mode = SOL_MODE_NORMAL;
 
-inline uint sol_collapse_mods()
+inline uint sol_collapse_mods(Input_Modifier_Set mods)
 {
     bool shift = 0;
     bool ctrl = 0;
     bool alt = 0;
-    for(uint i = 0; i < sol_last_key.mods.count; ++i) {
-        shift = sol_last_key.mods.mods[i] == KeyCode_Shift || shift;
-        ctrl = sol_last_key.mods.mods[i] == KeyCode_Control || ctrl;
-        alt = sol_last_key.mods.mods[i] == KeyCode_Alt || alt;
+    for(uint i = 0; i < mods.count; ++i) {
+        shift = mods.mods[i] == KeyCode_Shift || shift;
+        ctrl = mods.mods[i] == KeyCode_Control || ctrl;
+        alt = mods.mods[i] == KeyCode_Alt || alt;
     }
     // @Ugly There is likely a nicer way to do this.
     uint ret = 0;
@@ -149,16 +150,35 @@ typedef sol_custom_cmd (*sol_handle_key_cmd)();
 
 struct sol_4ed_key_mapping {
     uint key_4ed;
-    sol_handle_key_cmd cmd;
+    sol_mode_cmd_table table;
 };
-extern sol_4ed_key_mapping sol_4ed_key_maps[KeyCode_COUNT];
+extern sol_4ed_key_mapping sol_bind_table[KeyCode_COUNT];
 
-static inline sol_custom_cmd sol_update_do_command()
+inline sol_key_info sol_parseinput(User_Input *input)
 {
-    if (sol_last_key.kind == InputEventKind_KeyStroke &&
-        sol_4ed_key_maps[sol_last_key.code].cmd)
-    {
-        return (*sol_4ed_key_maps[sol_last_key.code].cmd)();
+    return {
+        .kind = input->event.kind,
+        .code = input->event.key.code,
+        .mods = sol_collapse_mods(input->event.key.modifiers),
+    };
+}
+
+static inline sol_cmd_table* sol_getmode(uint key_code)
+{
+    return ((sol_cmd_table*)(&sol_bind_table[key_code])) + sol_current_mode;
+}
+static inline sol_custom_cmd sol_getmod(sol_cmd_table *table, uint mods)
+{
+    return *((sol_custom_cmd*)(table) + mods);
+}
+
+static inline sol_custom_cmd sol_getcmd(User_Input *input)
+{
+    sol_key_info ki = sol_parseinput(input);
+    if (ki.kind == InputEventKind_KeyStroke) {
+        sol_cmd_table *table = sol_getmode(ki.code);
+        sol_custom_cmd cmd = sol_getmod(table, ki.mods);
+        return cmd;
     }
     return {};
 }
@@ -241,8 +261,8 @@ static inline sol_custom_cmd sol_update_do_command()
 #include "4coder_examples.cpp"
 
 #include "sol_commands.cpp"
+#include "sol_bind_table.cpp"
 #include "sol_bindings.cpp"
-#include "sol_bind_tables.cpp"
 
 #include "4coder_default_hooks.cpp"
 

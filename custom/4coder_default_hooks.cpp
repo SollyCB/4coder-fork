@@ -82,19 +82,17 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
     
     View_ID view = get_this_ctx_view(app, Access_Always);
     Managed_Scope scope = view_get_managed_scope(app, view);
-    
+
+    for(int i = 0; i < arrlen(sol_bind_fns); ++i)
+        (*(sol_bind_fns[i]))();
+
     for (;;){
         // NOTE(allen): Get input
         User_Input input = get_next_input(app, EventPropertyGroup_Any, 0);
 
-        if (input.abort){
+        if (input.abort) {
             break;
         }
-
-        sol_last_key.kind = input.event.kind;
-        sol_last_key.code = input.event.key.code;
-        sol_last_key.mods = input.event.key.modifiers;
-        sol_custom_cmd sol_command = sol_update_do_command();
 
         ProfileScopeNamed(app, "before view input", view_input_profile);
         
@@ -104,51 +102,32 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
             continue;
         }
 
-        if (sol_command.cmd == 0) {
+        sol_custom_cmd sol_cmd = sol_getcmd(&input);
+
+        if (sol_cmd.cmd == 0) {
             Implicit_Map_Result map_result = default_implicit_map(app, 0, 0, &input.event);
-            if (map_result.command == 0) {
+
+            if (!map_result.command) {
                 leave_current_input_unhandled(app);
                 continue;
-            } else {
-                default_pre_command(app, scope);
-                ProfileCloseNow(view_input_profile);
-
-                map_result.command(app);
-
-                ProfileScope(app, "after view input");
-                default_post_command(app, scope);
-                continue;
             }
-        }
-        
-        // NOTE(allen): Run the command and pre/post command stuff
-        default_pre_command(app, scope);
-        ProfileCloseNow(view_input_profile);
 
-        sol_do_command(app, sol_command);
+            default_pre_command(app, scope);
+            ProfileCloseNow(view_input_profile);
 
-        ProfileScope(app, "after view input");
-        default_post_command(app, scope);
-        
-        #if 0
-        // NOTE(allen): Get binding
-        if (implicit_map_function == 0){
-            implicit_map_function = default_implicit_map;
-        }
-        Implicit_Map_Result map_result = implicit_map_function(app, 0, 0, &input.event);
+            map_result.command(app);
 
-        if (map_result.command == 0){
-            leave_current_input_unhandled(app);
-            continue;
+            ProfileScope(app, "after view input");
+            default_post_command(app, scope);
+        } else {
+            default_pre_command(app, scope);
+            ProfileCloseNow(view_input_profile);
+
+            sol_do_command(app, sol_cmd);
+
+            ProfileScope(app, "after view input");
+            default_post_command(app, scope);
         }
-        
-        // NOTE(allen): Run the command and pre/post command stuff
-        default_pre_command(app, scope);
-        ProfileCloseNow(view_input_profile);
-        map_result.command(app);
-        ProfileScope(app, "after view input");
-        default_post_command(app, scope);
-        #endif
     }
 }
 

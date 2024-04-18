@@ -26,7 +26,14 @@ void sol_do_command(Application_Links *app, sol_custom_cmd cmd)
     history_group_end(group);
 }
 
-CUSTOM_COMMAND_SIG(nil) {}
+CUSTOM_COMMAND_SIG(noinput) {
+    sol_current_mode = sol_current_mode;
+}
+
+CUSTOM_COMMAND_SIG(textinput) 
+{
+    leave_current_input_unhandled(app);
+}
 
 CUSTOM_COMMAND_SIG(enter_normal_mode)
 {
@@ -68,6 +75,13 @@ CUSTOM_COMMAND_SIG(backspace_to_bol)
 {
     set_mark(app);
     seek_beginning_of_line(app);
+    delete_range(app);
+}
+
+CUSTOM_COMMAND_SIG(delete_to_eol)
+{
+    set_mark(app);
+    seek_end_of_line(app);
     delete_range(app);
 }
 
