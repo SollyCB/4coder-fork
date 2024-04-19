@@ -109,18 +109,19 @@ struct sol_cmd_table {
 };
 
 // @CmdTodo
-// change mode
-// replace mode
+// replace mode <- not quite sure how I would implement this yet...
 enum sol_mode { // these are used to index into below struct
     SOL_MODE_NORMAL,
     SOL_MODE_INSERT,
     SOL_MODE_DELETE,
+    SOL_MODE_CHANGE,
     SOL_MODE_COUNT,
 };
 struct sol_mode_cmd_table {
     sol_cmd_table normal;
     sol_cmd_table insert;
     sol_cmd_table del;
+    sol_cmd_table change;
 };
 sol_mode sol_current_mode = SOL_MODE_NORMAL;
 
@@ -148,11 +149,7 @@ inline uint sol_collapse_mods(Input_Modifier_Set mods)
 
 typedef sol_custom_cmd (*sol_handle_key_cmd)();
 
-struct sol_4ed_key_mapping {
-    uint key_4ed;
-    sol_mode_cmd_table table;
-};
-extern sol_4ed_key_mapping sol_bind_table[KeyCode_COUNT];
+extern sol_mode_cmd_table sol_bind_table[KeyCode_COUNT];
 
 inline sol_key_info sol_parseinput(User_Input *input)
 {

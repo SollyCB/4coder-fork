@@ -1,101 +1,95 @@
-#if 1
 sol_mode_cmd_table DEFAULT_BINDING_TABLE = {
-    .normal = {noinput,noinput,noinput,noinput,noinput,noinput,noinput,noinput,},
-    .insert = {{0},{0},noinput,noinput,noinput,noinput,noinput,noinput,},
-    .del    = {noinput,noinput,noinput,noinput,noinput,noinput,noinput,noinput,},
+    .normal = {noinput,   noinput,   noinput, noinput, noinput, noinput, noinput, noinput,},
+    .insert = {textinput, textinput, noinput, noinput, noinput, noinput, noinput, noinput,},
+    .del    = {noinput,   noinput,   noinput, noinput, noinput, noinput, noinput, noinput,},
+    .change = {noinput,   noinput,   noinput, noinput, noinput, noinput, noinput, noinput,},
 };
-#else
-sol_mode_cmd_table DEFAULT_BINDING_TABLE = {
-    .normal = {noinput,  noinput,  noinput,noinput,noinput,noinput,noinput,noinput,},
-    .insert = {textinput,textinput,noinput,noinput,noinput,noinput,noinput,noinput,},
-    .del    = {noinput,  noinput,  noinput,noinput,noinput,noinput,noinput,noinput,},
-};
-#endif
 
-sol_4ed_key_mapping sol_bind_table[] = {
+bool SOL_IS_BIND_TABLE_INITIALIZED = 0;
+
+sol_mode_cmd_table sol_bind_table[] = {
     {}, // 4ed keys start from 1
-    {.key_4ed=KeyCode_A,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_B,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_C,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_D,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_E,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_F,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_G,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_H,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_I,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_J,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_K,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_L,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_M,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_N,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_O,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_P,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Q,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_R,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_S,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_T,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_U,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_V,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_W,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_X,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Y,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Z,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_0,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_1,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_2,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_3,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_4,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_5,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_6,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_7,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_8,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_9,              .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Space,          .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Tick,           .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Minus,          .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Equal,          .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_LeftBracket,    .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_RightBracket,   .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Semicolon,      .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Quote,          .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Comma,          .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Period,         .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_ForwardSlash,   .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_BackwardSlash,  .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Tab,            .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Escape,         .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Pause,          .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Up,             .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Down,           .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Left,           .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Right,          .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Backspace,      .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Return,         .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Delete,         .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Insert,         .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Home,           .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_End,            .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_PageUp,         .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_PageDown,       .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_CapsLock,       .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_NumLock,        .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_ScrollLock,     .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Menu,           .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Shift,          .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Control,        .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Alt,            .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_Command,        .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_F1,             .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_F2,             .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_F3,             .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_F4,             .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_F5,             .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_F6,             .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_F7,             .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_F8,             .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_F9,             .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_F10,            .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_F11,            .table=DEFAULT_BINDING_TABLE},
-    {.key_4ed=KeyCode_F12,            .table=DEFAULT_BINDING_TABLE},
+    DEFAULT_BINDING_TABLE, /*KeyCode_A*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_B*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_C*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_D*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_E*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_F*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_G*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_H*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_I*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_J*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_K*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_L*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_M*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_N*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_O*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_P*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Q*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_R*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_S*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_T*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_U*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_V*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_W*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_X*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Y*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Z*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_0*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_1*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_2*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_3*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_4*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_5*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_6*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_7*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_8*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_9*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Space*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Tick*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Minus*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Equal*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_LeftBracket*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_RightBracket*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Semicolon*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Quote*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Comma*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Period*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_ForwardSlash*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_BackwardSlash,*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Tab*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Escape*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Pause*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Up*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Down*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Left*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Right*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Backspace*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Return*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Delete*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Insert*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Home*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_End*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_PageUp*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_PageDown*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_CapsLock*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_NumLock*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_ScrollLock*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Menu*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Shift*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Control*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Alt*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_Command*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_F1*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_F2*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_F3*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_F4*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_F5*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_F6*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_F7*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_F8*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_F9*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_F10*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_F11*/
+    DEFAULT_BINDING_TABLE, /*KeyCode_F12*/
 };
-

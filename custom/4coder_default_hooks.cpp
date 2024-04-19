@@ -77,14 +77,15 @@ default_implicit_map(Application_Links *app, String_ID lang, String_ID mode, Inp
 CUSTOM_COMMAND_SIG(default_view_input_handler)
 CUSTOM_DOC("Input consumption loop for default view behavior")
 {
+    for(int i = 0; i < arrlen(sol_bind_fns) && !SOL_IS_BIND_TABLE_INITIALIZED; ++i)
+        (*(sol_bind_fns[i]))();
+    SOL_IS_BIND_TABLE_INITIALIZED = 1;
+
     Scratch_Block scratch(app);
     default_input_handler_init(app, scratch);
     
     View_ID view = get_this_ctx_view(app, Access_Always);
     Managed_Scope scope = view_get_managed_scope(app, view);
-
-    for(int i = 0; i < arrlen(sol_bind_fns); ++i)
-        (*(sol_bind_fns[i]))();
 
     for (;;){
         // NOTE(allen): Get input
