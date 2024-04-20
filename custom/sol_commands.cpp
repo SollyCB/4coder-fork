@@ -229,33 +229,11 @@ CUSTOM_COMMAND_SIG(change_to_beginning_of_last_word)
         enter_insert_mode(app);
 }
 
-// @Bug
-#define BUGGED_DUPLICATE_LINE_DOES_NOT_MOVE_DOWN_IF_AT_LINE_START_BUT_DOES_OTHERWISE
-
-CUSTOM_COMMAND_SIG(open_line_below)
-{
-    #ifndef BUGGED_DUPLICATE_LINE_DOES_NOT_MOVE_DOWN_IF_AT_LINE_START_BUT_DOES_OTHERWISE
-    duplicate_line(app);
-    seek_beginning_of_line(app);
-    set_mark(app);
-    seek_end_of_line(app);
-    delete_range(app);
-    enter_insert_mode(app);
-    #endif
-}
-
-CUSTOM_COMMAND_SIG(open_line_above)
-{
-    #ifndef BUGGED_DUPLICATE_LINE_DOES_NOT_MOVE_DOWN_IF_AT_LINE_START_BUT_DOES_OTHERWISE
-    duplicate_line(app);
-    seek_beginning_of_line(app);
-    set_mark(app);
-    seek_end_of_line(app);
-    delete_range(app);
-    move_line_up(app);
-    enter_insert_mode(app);
-    #endif
-}
+// @Todo Cannot figure out how to do this yet without being
+// able to sort of project keys. Would be easy if I could
+// say "insert an enter key now"
+CUSTOM_COMMAND_SIG(open_line_below) {}
+CUSTOM_COMMAND_SIG(open_line_above) {}
 
 CUSTOM_COMMAND_SIG(copy_line)
 {
@@ -298,16 +276,52 @@ CUSTOM_COMMAND_SIG(del_delete_current_scope)
 {
     select_surrounding_scope(app);
     delete_current_scope(app);
-    if(sol_current_mode == SOL_MODE_DELETE)
-        sol_current_mode = SOL_MODE_NORMAL;
+    if (sol_current_mode == SOL_MODE_DELETE)
+        enter_normal_mode(app);
 }
 
 CUSTOM_COMMAND_SIG(change_current_scope)
 {
     select_surrounding_scope(app);
     delete_current_scope(app);
-    if(sol_current_mode == SOL_MODE_CHANGE)
-        sol_current_mode = SOL_MODE_INSERT;
+    if (sol_current_mode == SOL_MODE_CHANGE)
+        enter_insert_mode(app);
+}
+
+CUSTOM_COMMAND_SIG(delete_to_token_right)
+{
+    set_mark(app);
+    move_right_token_boundary(app);
+    delete_range(app);
+    if (sol_current_mode == SOL_MODE_DELETE)
+        enter_normal_mode(app);
+}
+
+CUSTOM_COMMAND_SIG(delete_to_token_left)
+{
+    set_mark(app);
+    move_left_token_boundary(app);
+    delete_range(app);
+    if (sol_current_mode == SOL_MODE_DELETE)
+        enter_normal_mode(app);
+}
+
+CUSTOM_COMMAND_SIG(change_to_token_right)
+{
+    set_mark(app);
+    move_right_token_boundary(app);
+    delete_range(app);
+    if (sol_current_mode == SOL_MODE_CHANGE)
+        enter_insert_mode(app);
+}
+
+CUSTOM_COMMAND_SIG(change_to_token_left)
+{
+    set_mark(app);
+    move_left_token_boundary(app);
+    delete_range(app);
+    if (sol_current_mode == SOL_MODE_CHANGE)
+        enter_insert_mode(app);
 }
 
 CUSTOM_COMMAND_SIG(move_down_20)

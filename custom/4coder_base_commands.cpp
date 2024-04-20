@@ -204,7 +204,7 @@ CUSTOM_DOC("Centers the view vertically on the line on which the cursor sits.")
     f32 view_height = rect_height(region);
     Buffer_Scroll scroll = view_get_buffer_scroll(app, view);
     scroll.target.line_number = cursor.line;
-    scroll.target.pixel_shift.y = -view_height*0.5f;
+    scroll.target.pixel_shift.y = -view_height*0.20f; // default: * 0.5 (obvs)
     view_set_buffer_scroll(app, view, scroll, SetBufferScroll_SnapCursorIntoView);
     no_mark_snap_to_cursor(app, view);
 }

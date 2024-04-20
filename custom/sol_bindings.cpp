@@ -57,6 +57,27 @@ declbindfn(l) {
     bind(L, change, none,  change_to_eol);
 }
 
+declbindfn(t) {
+    bind(T, normal, none,  move_right_token_boundary);
+    bind(T, normal, shift, move_left_token_boundary);
+    bind(T, normal, ctrl,  search_identifier);
+    bind(T, normal, alt,   reverse_search_identifier);
+    bind(T, del,    none,  delete_to_token_right);
+    bind(T, del,    shift, delete_to_token_left);
+    bind(T, change, none,  change_to_token_right);
+    bind(T, change, shift, change_to_token_left);
+    
+    bind(T, normal, ctrl_shift, list_all_locations_of_identifier);
+    bind(T, normal, alt_shift,  list_all_locations_of_identifier);
+    
+    bind(T, normal, ctrl_alt_shift, theme_lister);
+}
+
+declbindfn(f) {
+    bind(F, normal, ctrl_shift, list_all_functions_all_buffers);
+    bind(F, normal, alt_shift,  list_all_functions_current_buffer);
+}
+
 declbindfn(w) {
     bind(W, normal, none,  seek_beginning_of_next_word);
     bind(W, normal, shift, seek_beginning_of_next_whitespace);
@@ -76,19 +97,30 @@ declbindfn(b) {
 }
 
 declbindfn(o) {
-    bind(O, normal, none,  open_line_below);
+    bind(O, normal, none,  open_line_below); // open_line_<above|below> currently broken
     bind(O, normal, shift, open_line_above);
     bind(O, normal, ctrl,  interactive_open_or_new);
     bind(O, normal, alt,   open_in_other);
 }
 
 declbindfn(y) {
+    bind(Y, normal, none,  copy);
     bind(Y, normal, shift, duplicate_line);
 }
 
 declbindfn(p) {
     bind(P, normal, none, paste);
     bind(P, normal, ctrl, goto_prev_jump);
+}
+
+declbindfn(x) {
+    bind(X, normal, none,  delete_char);
+    bind(X, normal, ctrl,  cut);
+    bind(X, normal, shift, duplicate_line);
+}
+
+declbindfn(z) {
+    bind(Z, normal, none, center_view);
 }
 
 declbindfn(q) {
@@ -101,15 +133,11 @@ declbindfn(u) {
 }
 
 declbindfn(r) {
-    bind(R, normal, ctrl, redo);
+    bind(R, normal, none, replace_in_range);
 }
 
 declbindfn(s) {
     bind(S, normal, ctrl, save);
-}
-
-declbindfn(t) {
-    bind(T, normal, ctrl_shift, theme_lister);
 }
 
 declbindfn(m) {
@@ -119,10 +147,6 @@ declbindfn(m) {
 
 declbindfn(n) {
     bind(N, normal, ctrl, goto_next_jump);
-}
-
-declbindfn(x) {
-    bind(X, normal, none, delete_char);
 }
 
 declbindfn(backspace) {
@@ -149,7 +173,9 @@ declbindfn(semicolon) {
 }
 
 declbindfn(slash) {
-    bind(ForwardSlash, normal, none, list_all_locations);
+    bind(ForwardSlash, normal, none,  search);
+    bind(ForwardSlash, normal, shift, reverse_search);
+    bind(ForwardSlash, normal, ctrl,  list_all_substring_locations);
 }
 
 declbindfn(comma) {
@@ -177,6 +203,20 @@ declbindfn(closebracket) {
     bind(RightBracket, normal, shift, select_next_scope_absolute);
 }
 
+declbindfn(pagedown) {
+    bind(PageDown, normal, none,  page_down);
+    bind(PageDown, normal, shift, goto_end_of_file);
+    bind(PageDown, insert, none,  page_down);
+    bind(PageDown, insert, shift, goto_end_of_file);
+}
+
+declbindfn(pageup) {
+    bind(PageUp, normal, none,  page_up);
+    bind(PageUp, normal, shift, goto_beginning_of_file);
+    bind(PageUp, insert, none,  page_up);
+    bind(PageUp, insert, shift, goto_beginning_of_file);
+}
+
 declbindfn(eight) {
     bind(8, normal, shift, list_all_locations_of_identifier);
 }
@@ -200,9 +240,11 @@ bindfn sol_bind_fns[] = {
     refbindfn(r),
     refbindfn(s),
     refbindfn(t),
+    refbindfn(f),
     refbindfn(m),
     refbindfn(n),
     refbindfn(x),
+    refbindfn(z),
     refbindfn(backspace),
     refbindfn(enter),
     refbindfn(del),
@@ -213,6 +255,7 @@ bindfn sol_bind_fns[] = {
     refbindfn(fullstop),
     refbindfn(openbracket),
     refbindfn(closebracket),
-
+    refbindfn(pagedown),
+    refbindfn(pageup),
     refbindfn(eight),
 };

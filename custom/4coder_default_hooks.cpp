@@ -78,23 +78,23 @@ CUSTOM_COMMAND_SIG(default_view_input_handler)
 CUSTOM_DOC("Input consumption loop for default view behavior")
 {
     for(int i = 0; i < arrlen(sol_bind_fns) && !SOL_IS_BIND_TABLE_INITIALIZED; ++i)
-        (*(sol_bind_fns[i]))();
+    (*(sol_bind_fns[i]))();
     SOL_IS_BIND_TABLE_INITIALIZED = 1;
-
+    
     Scratch_Block scratch(app);
     default_input_handler_init(app, scratch);
     
     View_ID view = get_this_ctx_view(app, Access_Always);
     Managed_Scope scope = view_get_managed_scope(app, view);
-
+    
     for (;;){
         // NOTE(allen): Get input
         User_Input input = get_next_input(app, EventPropertyGroup_Any, 0);
-
+        
         if (input.abort) {
             break;
         }
-
+        
         ProfileScopeNamed(app, "before view input", view_input_profile);
         
         // NOTE(allen): Mouse Suppression
@@ -102,30 +102,30 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
         if (suppressing_mouse && (event_properties & EventPropertyGroup_AnyMouseEvent) != 0){
             continue;
         }
-
+        
         sol_custom_cmd sol_cmd = sol_getcmd(&input);
-
+        
         if (sol_cmd.cmd == 0) {
             Implicit_Map_Result map_result = default_implicit_map(app, 0, 0, &input.event);
-
+            
             if (!map_result.command) {
                 leave_current_input_unhandled(app);
                 continue;
             }
-
+            
             default_pre_command(app, scope);
             ProfileCloseNow(view_input_profile);
-
+            
             map_result.command(app);
-
+            
             ProfileScope(app, "after view input");
             default_post_command(app, scope);
         } else {
             default_pre_command(app, scope);
             ProfileCloseNow(view_input_profile);
-
+            
             sol_do_command(app, sol_cmd);
-
+            
             ProfileScope(app, "after view input");
             default_post_command(app, scope);
         }
@@ -203,7 +203,7 @@ default_buffer_region(Application_Links *app, View_ID view_id, Rect_f32 region){
     f32 digit_advance = metrics.decimal_digit_advance;
     
     // NOTE(allen): margins
-    region = rect_inner(region, 3.f);
+    region = rect_inner(region, 1.0f);
     
     // NOTE(allen): file bar
     b64 showing_file_bar = false;

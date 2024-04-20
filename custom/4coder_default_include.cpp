@@ -67,6 +67,23 @@
 
 ////////////////////////////////
 
+// @TODO - Stuff to implement
+//
+// Parser:
+// I would like better syntax highlighting. I think the way
+// to do this is to maintain a hashmap of types and use them
+// for fetching tokens? Idk. Says on the website something
+// about the token array being too long, but I think if I
+// set it up in a smart enough way then I should be able to
+// do it. Just keep a hashmap of my type and function names
+// by parsing the files in a project on load. Will have to
+// see how fast it all is. Should be lightning with hashmap.
+// 
+// Open Line:
+// I think that this can be done by hacking write text but
+// I am not sure. I cannot see a way which works without
+// me being able to send down an enter char to text_input.
+
 typedef unsigned int uint;
 
 #define SOL_MAX 0xffffffffffffffff
