@@ -1,6 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Key Bindings
 
+// Binding Todo List:
+// arrow keys in insert
+// open_line
+// delete surrounding pair
+
 typedef void (*bindfn)();
 
 #define bind(key, mode, mod, new_cmd) sol_bind_table[KeyCode_##key].mode.mod.cmd = new_cmd
@@ -15,7 +20,9 @@ declbindfn(a) {
 declbindfn(i) {
     bind(I, normal, none,  enter_insert_mode);
     bind(I, normal, shift, insert_at_bol);
-    bind(I, normal, ctrl,  interactive_switch_buffer);
+    
+    bind(I, normal, ctrl,       interactive_switch_buffer);
+    bind(I, normal, ctrl_shift, interactive_kill_buffer);
 }
 
 declbindfn(d) {
@@ -74,6 +81,8 @@ declbindfn(t) {
 }
 
 declbindfn(f) {
+    bind(F, normal, ctrl, toggle_filebar);
+    
     bind(F, normal, ctrl_shift, list_all_functions_all_buffers);
     bind(F, normal, alt_shift,  list_all_functions_current_buffer);
 }
@@ -90,6 +99,8 @@ declbindfn(w) {
 declbindfn(b) {
     bind(B, normal, none,  seek_beginning_of_last_word);
     bind(B, normal, shift, seek_beginning_of_last_whitespace);
+    bind(B, normal, ctrl,  build_in_build_panel);
+    
     bind(B, del,    shift, delete_to_beginning_of_last_whitespace);
     bind(B, change, shift, change_to_beginning_of_last_whitespace);
     bind(B, del,    none,  delete_to_beginning_of_last_word);
