@@ -38,13 +38,13 @@ CUSTOM_COMMAND_SIG(textinput)
 CUSTOM_COMMAND_SIG(enter_normal_mode)
 {
     sol_current_mode = SOL_MODE_NORMAL;
-    active_color_table.arrays[defcolor_cursor].vals[0] = 0xff00ff00;
+    active_color_table.arrays[defcolor_cursor].vals[0] = 0xff000000;
 }
 
 CUSTOM_COMMAND_SIG(enter_insert_mode)
 {
     sol_current_mode = SOL_MODE_INSERT;
-    active_color_table.arrays[defcolor_cursor].vals[0] = 0xff0000ff;
+    active_color_table.arrays[defcolor_cursor].vals[0] = 0xffaaaaaa;
 }
 
 CUSTOM_COMMAND_SIG(enter_delete_mode)

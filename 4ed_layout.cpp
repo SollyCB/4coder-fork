@@ -289,7 +289,7 @@ layout_initialize(Arena *arena, Layout *layout){
     layout->panel_first = panels;
     layout->panel_one_past_last = panels + panel_alloc_count;
     
-    layout->margin = 3;
+    layout->margin = 1;
     layout->open_panel_count = 0;
     layout->open_panel_max_count = MAX_VIEWS;
     
